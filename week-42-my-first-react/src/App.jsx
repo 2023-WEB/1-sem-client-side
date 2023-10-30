@@ -6,13 +6,15 @@ import { Header } from "./components/molecules/Header";
 function App() {
   const [count, setCount] = useState(0);
 
+  function handleClick() {
+    setCount(count + 1);
+  }
+
   return (
     <>
       <Header />
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+        <button onClick={handleClick}>count is {count}</button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
