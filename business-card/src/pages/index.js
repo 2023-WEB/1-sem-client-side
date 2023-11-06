@@ -1,7 +1,36 @@
 import Head from "next/head";
 import SmallCard from "@/components/molecules/SmallCard";
+import { useEffect, useState } from "react";
+import { getBusinessCards } from "@/services/firebase-service";
 
 export default function Home() {
+  const [cards, setCards] = useState([]);
+  /*
+  // This is just for demonstration purposes
+  useEffect(() => {
+    // Callback function
+    getBusinessCards()
+      .then((response) => {
+        return response.json();
+      })
+      .then((body) => {
+        console.log(body);
+      });
+  }, []); // The dependency array
+  */
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getBusinessCards();
+      const body = await response.json();
+      const objects = Object.values(body);
+      console.log(objects);
+      setCards(objects);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <Head>
@@ -12,21 +41,11 @@ export default function Home() {
       </Head>
       <main>
         <h1>Start my business card project here.</h1>
-        <SmallCard
-          name="Laura Smith"
-          job="frontend developer"
-          website="laurasmith.website"
-        />
-        <SmallCard
-          name="Laura Smith"
-          job="frontend developer"
-          website="laurasmith.website"
-        />
-        <SmallCard
-          name="Laura Smith"
-          job="frontend developer"
-          website="laurasmith.website"
-        />
+        {cards.map((card) => {
+          return (
+            <SmallCard name={card.name} job={card.job} website={card.website} />
+          );
+        })}
       </main>
     </>
   );

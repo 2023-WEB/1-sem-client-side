@@ -1,3 +1,4 @@
+import { postBusinessCard } from "@/services/firebase-service";
 import React, { useState } from "react";
 import Drawer from "react-modern-drawer";
 
@@ -32,13 +33,40 @@ export default function Header() {
     setWebsite(event.target.value);
   }
 
+  function handleCancel() {
+    setIsOpen(false);
+    setName("");
+    setJob("");
+    setWebsite("");
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    console.log("handle submit");
+    const data = {
+      name,
+      job,
+      website,
+    };
+
+    const response = await postBusinessCard(data);
+
+    if (response.ok) {
+      console.log("everything went ok.");
+      console.log(response);
+      const body = await response.json();
+      console.log(body);
+      handleCancel();
+    }
+  }
+
   return (
     <nav>
       <h1>Business Cards</h1>
       <button onClick={handleClick}>Create new</button>
       <Drawer open={isOpen} onClose={handleClose} direction="right">
         // Create a new business Card, // Name, Job, Website
-        <form>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             name="name"
@@ -60,6 +88,8 @@ export default function Header() {
             value={website}
             onChange={handleWebsiteChange}
           />
+          <button onClick={handleCancel}>Cancel</button>
+          <input type="submit" value={"Create"} />
         </form>
       </Drawer>
     </nav>
