@@ -4,9 +4,12 @@ import Drawer from "react-modern-drawer";
 export default function Header() {
   // All of the state
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [job, setJob] = useState("");
-  const [website, setWebsite] = useState("");
+
+  const [formData, setFormData] = useState({
+    name: "",
+    job: "",
+    website: "",
+  });
 
   // all of our side effects
 
@@ -20,16 +23,13 @@ export default function Header() {
     setIsOpen(false);
   }
 
-  function handleNameChange(event) {
-    setName(event.target.value);
-  }
+  function handleFormChange(event) {
+    const { value, name } = event.target;
 
-  function handleJobChange(event) {
-    setJob(event.target.value);
-  }
-
-  function handleWebsiteChange(event) {
-    setWebsite(event.target.value);
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   }
 
   return (
@@ -43,22 +43,22 @@ export default function Header() {
             type="text"
             name="name"
             placeholder="name"
-            value={name}
-            onChange={handleNameChange}
+            value={formData.name}
+            onChange={handleFormChange}
           />
           <input
             type="text"
             name="job"
             placeholder="job title"
-            value={job}
-            onChange={handleJobChange}
+            value={formData.job}
+            onChange={handleFormChange}
           />
           <input
             type="text"
             name="website"
             placeholder="website"
-            value={website}
-            onChange={handleWebsiteChange}
+            value={formData.website}
+            onChange={handleFormChange}
           />
         </form>
       </Drawer>
