@@ -1,11 +1,10 @@
 import React from "react";
+import Header from "../molecules/Header";
 
 export default function DefaultLayout({ children }) {
   return (
     <>
-      <nav>
-        <h1>Business Cards</h1>
-      </nav>
+      <Header />
       {children}
       <footer>
         contact information
