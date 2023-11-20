@@ -2,9 +2,12 @@ import Head from "next/head";
 import SmallCard from "@/components/molecules/SmallCard";
 import { useEffect, useState } from "react";
 import { getBusinessCards } from "@/services/firebase-service";
+import PrettySpinner from "@/components/atoms/PrettySpinner";
 
 export default function Home() {
   const [cards, setCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   /*
   // This is just for demonstration purposes
   useEffect(() => {
@@ -21,11 +24,25 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getBusinessCards();
-      const body = await response.json();
-      const objects = Object.values(body);
-      console.log(objects);
-      setCards(objects);
+      setIsLoading(true);
+
+      setTimeout(async () => {
+        const response = await getBusinessCards();
+
+        if (response.ok) {
+          const body = await response.json();
+          const objects = Object.values(body);
+          setCards(objects);
+        } else {
+          const statusCode = response.statusCode;
+          if (500 <= statusCode) {
+            alert("Server error");
+          } else if (400 <= statusCode && statusCode < 500) {
+            alert("you fucked up");
+          }
+        }
+        setIsLoading(false);
+      }, 2500);
     }
 
     fetchData();
@@ -41,11 +58,20 @@ export default function Home() {
       </Head>
       <main>
         <h1>Start my business card project here.</h1>
-        {cards.map((card) => {
-          return (
-            <SmallCard name={card.name} job={card.job} website={card.website} />
-          );
-        })}
+        {/* isLoading && <PrettySpinner /> */}
+        {isLoading ? (
+          <PrettySpinner />
+        ) : (
+          cards.map((card) => {
+            return (
+              <SmallCard
+                name={card.name}
+                job={card.job}
+                website={card.website}
+              />
+            );
+          })
+        )}
       </main>
     </>
   );
